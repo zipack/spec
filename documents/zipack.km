@@ -1,0 +1,41 @@
+zipack
+	mini natural
+	1
+		10
+			mini string
+			mini list
+		11
+			mini map
+			111
+				(mini reserved)
+				1111
+					11110
+						111100
+							1111000
+								True
+								False
+							1111001
+								positive non-integer
+								negative non-integer
+						111101
+							1111010
+								VLQ bytes
+								VLQ string
+							1111011
+								VLQ list
+								VLQ map
+					11111
+						111110
+							1111100
+								VLQ positive integer
+								VLQ negative integer
+							1111101
+								null
+								(reserved)
+						111111
+							1111110
+								(reserved)
+								(reserved)
+							1111111
+								(reserved)
+								(reserved)
