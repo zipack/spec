@@ -1,4 +1,4 @@
-# Zipack
+# Zipack Specification
 
 > https://zipack.github.io/website
 

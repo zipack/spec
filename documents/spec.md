@@ -32,10 +32,19 @@ The key utility in zipack is called the [biased VLQ natural](https://en.wikipedi
 
 I abandoned UTF-8 for better compression. Since every Unicode character has an uniq number from 0, so Zipack String maps Unicode to VLQ's natural. The Zipack String is used in 2 position: the String type and the key in Map.
 
-## Zipack Precision
+## Zipack Precision: reversed bijective algorithm 
 
-I abandoned IEEE's Floating Point for better compression. 
+I abandoned IEEE's Floating Point for better compression. Literally every non-integer can be splited by dot(.) into 2 parts: integer part and precision part. Since the trailing '0' in precision part is meaningless(e.g. 0.120=0.12), the heading '0' in natural number is also meaningless(e.g. 012=12). So when we reverse every digit of the precision part, the outcome can be uniquely mapped to a natural number(counting from 1, because 0 is integer). It's so called [bijective numeration](https://en.wikipedia.org/wiki/Bijective_numeration). Here is an example encoding 110.0101 in binary:
+
+1. remove meaningless '0' in both sides, no changes
+2. split "110.0101" into "110" and "0101"
+3. encode 110 into a VLQ's natural (A)
+4. reverse "0101" into "1010"
+5. 1010 - 1 = 1001
+6. encode 1001 into a VLQ's natural (B)
+7. concat A and B seamlessly and output (AB)
+
 
 ## The Huffman prefix
 
-Zipack supports 21 data types(with 6 reserved types), their definition is in [spec.km](./zipack.km). Generally every data type contains 3 parts: Class, Length and Payload. 
+Zipack supports 21 data types(including 6 reserved types), their definition is in [spec.km](./zipack.km). Generally every data type contains 3 parts: Class, Length and Payload. 
