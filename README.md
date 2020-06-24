@@ -6,7 +6,7 @@ Zipack is an efficient serialization format, it's a replacement to JSON, but sma
 
 ## Motivation
 
-The most popular serialization format today is JSON, which is based on text. However text format has drawbacks like slow compilation and larger size in comparison to binary format. So I defined a compact, schema-less binary-based serialization format in compatibility with JSON, in order to provide better performance in storage / on wire.
+The most popular serialization format today is JSON, which is based on text. However text format has drawbacks like slow compilation and larger size in comparison to prefix-based binary format. So I defined a compact, schema-less binary-based serialization format in compatibility with JSON, in order to provide better performance in storage / on wire.
 
 ## Ecosystem
 

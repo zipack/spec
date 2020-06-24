@@ -28,11 +28,11 @@ The key utility in zipack is called the [biased VLQ natural](https://en.wikipedi
 
 > Make sure u understand this concept cause Zipack is heavily based on VLQ's natural
 
-## Zipack String: Unicode on VLQ's natural
+## Zipack's String: Unicode on VLQ's natural
 
 I abandoned UTF-8 for better compression. Since every Unicode character has an uniq number from 0, so Zipack String maps Unicode to VLQ's natural. The Zipack String is used in 2 position: the String type and the key in Map.
 
-## Zipack Precision: reversed bijective algorithm 
+## Zipack's Precision: reversed bijective algorithm
 
 I abandoned IEEE's Floating Point for better compression. Literally every non-integer can be splited by dot(.) into 2 parts: integer part and precision part. Since the trailing '0' in precision part is meaningless(e.g. 0.120=0.12), the heading '0' in natural number is also meaningless(e.g. 012=12). So when we reverse every digit of the precision part, the outcome can be uniquely mapped to a natural number(counting from 1, because 0 is integer). It's so called [bijective numeration](https://en.wikipedia.org/wiki/Bijective_numeration). Here is an example encoding 110.0101 in binary:
 
@@ -44,7 +44,234 @@ I abandoned IEEE's Floating Point for better compression. Literally every non-in
 6. encode 1001 into a VLQ's natural (B)
 7. concat A and B seamlessly and output (AB)
 
-
 ## The Huffman prefix
 
-Zipack supports 21 data types(including 6 reserved types), their definition is in [spec.km](./zipack.km). Generally every data type contains 3 parts: Class, Length and Payload. 
+Zipack supports 21 data types(including 6 reserved types), their definition is in [zipack.km](./zipack.km). Generally every data type contains 3 parts: Class, Length and Payload. Here is their definition table:
+
+|               |   Class | Length | meaning of Length | Payload
+| --- | --- | --- | --- | ---
+| Mini Natural  | 0  | none | \  | 7bit (0~127)
+| VLQ +Int      | 1111 1000 | none          | \ | VLQ's natural + 128
+| VLQ -Int      | 1111 1001 | none          | \ | -1 - VLQ's natural
+| +Precision    | 1111 0010 | none          | \ | Zipack's Precision
+| -Precision    | 1111 0011 | none          | \ | Zipack's Precision
+| Mini String   | 100       | 5bit (0~31)         | count of chars | Zipack's String
+| VLQ String    | 1111 0101 | VLQ's natural + 32 | count of chars | Zipack's String
+| (key in Map)  | none      | VLQ's natural | count of key's chars | Zipack's String
+| Bytes         | 1111 0100 | VLQ's natural | count of bytes    | the pure bytes
+| Boolean       | 1111 0000, 1111 0001      | none | \ | \
+| Null          | 1111 1010 | none          | \ | \
+| Mini List     | 101       | 5bit (0~31)   | count of elements | List elements
+| VLQ List      | 1111 0110 | VLQ's natural + 32 | count of elements | List elements
+| Mini Map      | 110       | 5bit (0~31)   | count of key-value pairs | key-value pairs
+| VLQ Map       | 1111 0111 | VLQ's natural + 32 | count of key-value pairs | key-value pairs
+| reserved types | FB, FC, FD, FE, FF | \ | \ | \
+| reserved types | 1110     | 4bit(0~15)    | count of objects | countable objects
+
+## Notation in diagrams
+
+```text
+a single byte:
++--------+
+|        |
++--------+
+
+one or more bytes:
++--------+
+|       ....
++--------+
+
+a VLQ's Natural:(contains one or more bytes)
++========+
+|        |
++========+
+
+one or more VLQ's Natural:
++========+
+|       ....
++========+
+
+an element that can be any of basic/complex types:
+++++++++++
+|        |
+++++++++++
+
+one or more elements:
+++++++++++
+|       ....
+++++++++++
+
+a key-value pair:
++########+
+|        |
++########+
+
+one or more key-value pairs:
++########+
+|       ....
++########+
+```
+
+## Basic types
+
+The Basic types refer to True, False, Null, Integer Family, Precision Family, String, Bytes.
+
+### Single byte types: True, False, Null
+
+```text
+True:
++--------+
+|   F0   |
++--------+
+
+False:
++--------+
+|   F1   |
++--------+
+
+Null:
++--------+
+|   FA   |
++--------+
+```
+
+### Integer Family
+
+```text
+Mini Natural: stores 7-bit unsigned integer ranging from 0~127, in a single byte.
++--------+
+|0xxxxxxx|
++--------+
+
+VLQ +Int: stores a positive integer on top of Mini Natural(counting from 128), uses a VLQ's Natural to represent the value.
++--------+========+
+|   F8   |  +128  |
++--------+========+
+
+VLQ -Int: stores a negative integer counting from -1.
++--------+========+
+|   F9   |   -1   |
++--------+========+
+```
+
+> xxxxxxx is a 7-bit natural unsigned integer.
+
+> +128 means the real value of this VLQ should be added 128.
+
+> -1 means the real value of this VLQ should be added 1 and negative it.
+
+### Precision Family
+
+The non-integer number is encoded using the "reversed bijective" algorithm I mentioned before. A Zipack's Precision number can be stored by 2 VLQ's Natural, one for Integer part(left), the other for Precision part(right).
+
+```text
++Precision: stores a positive non-integer.
++--------+========+========+
+|   F2   |  left  |  right |
++--------+========+========+
+
+-Precision: stores a negative non-integer.
++--------+========+========+
+|   F3   |  left  |  right |
++--------+========+========+
+```
+
+### Pure Bytes
+
+Bytes stores pure binary data like files, images, etc. Zipack has NO "Mini Bytes" for this type usually stores large data. It need a VLQ's Natural to represent the number of bytes.
+
+```text
++--------+========+--------+
+|   F4   |   +0   |       ....
++--------+========+--------+
+```
+
+> +0 means the real value of this VLQ is the count of pure bytes.
+
+### String
+
+As mentioned before, a Unicode char can be encoded by a VLQ's Natural, so String is seamlessly concatenated chars.
+
+```text
+Mini String: stores a Unicode string whose length < 32.
++--------+========+
+|100xxxxx|       ....
++--------+========+
+
+VLQ String: stores a Unicode string whose length >= 32, the Length part should count from 32.
++--------+========+========+
+|   F5   |   +32  |       ....
++--------+========+========+
+```
+
+> xxxxx is a 5-bit unsigned integer representing the count of chars.
+
+> +32 means the real value of this VLQ representing the count of chars should be added 32.
+
+## Complex types
+
+Complex types refer to List, Map and reserved types. In comparison to basic types, complex types can nest other basic/complex types like JSON.
+
+### List
+
+Similar to String, Zipack List also defers Mini List and VLQ List.
+
+```text
+Mini List: stores a list whose length < 32.
++--------++++++++++
+|101xxxxx|       ....
++--------++++++++++
+
+VLQ List: stores a list whose length >= 32, the Length part should count from 32.
++--------+========++++++++++
+|   F6   |   +32  |       ....
++--------+========++++++++++
+```
+
+> xxxxx is a 5-bit unsigned integer representing the count of elements.
+
+> +32 means the real value of this VLQ representing the count of elements should be added 32.
+
+### Map
+
+Zipack Map is key-value pairs where the key is a string and the value can be any of Zipack's basic/complex types. Similar to String and List, Map also defers Mini Map and VLQ Map.
+
+```text
+key-value pair: stores a string without prefix and a element.
++========+============++++++++++
+|   +0   |    ....    |        |
++========+============++++++++++
+or:
++########+
+|        |
++########+
+
+Mini Map: stores a map where the count of key-value pairs < 32.
++--------+########+
+|110xxxxx|       ....
++--------+########+
+
+VLQ Map: stores a map where the count of key-value pairs >= 32.
++--------+========+########+
+|   F7   |   +32  |       ....
++--------+========+########+
+```
+
+> +0 means the real value of this VLQ represents the length of key.
+
+> xxxxx is a 5-bit unsigned integer representing the count of key-value pairs.
+
+> +32 means the real value of this VLQ representing the count of key-value pairs should be added 32.
+
+### Reserved types
+
+Zipack reserves 6 undefined prefix which can be extended by users:
+
+- 1110
+- 1111 1011
+- 1111 1100
+- 1111 1101
+- 1111 1110
+- 1111 1111
+
+## 
