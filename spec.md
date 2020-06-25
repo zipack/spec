@@ -1,4 +1,4 @@
-# Zipack specification
+# Zipack Specification
 
 ## Intro
 
@@ -50,7 +50,7 @@ I abandoned IEEE's Floating Point for better compression. Literally every non-in
 
 ## The Huffman prefix
 
-Zipack supports 21 data types(including 6 reserved types), their definition is [zipack.km](./zipack.km). Generally every data type contains 3 parts: CLASS, LENGTH and PAYLOAD. Here is their definition table:
+Zipack supports 21 data types(including 6 reserved types), their definition is [tree.km](./tree.km). Generally every data type contains 3 parts: CLASS, LENGTH and PAYLOAD. Here is their definition table:
 
 |               |   CLASS | LENGTH | meaning of LENGTH | PAYLOAD
 | --- | --- | --- | --- | ---
@@ -282,4 +282,17 @@ Zipack reserves 6 undefined prefix which can be extended by users:
 - 1111 1110
 - 1111 1111
 
-## 
+## Zipack stream
+
+Zipack Stream is like List, but without prefix(CLASS and LENGTH part).
+
+```text
+Zipack stream: one or more zipack object concatenated seamlessly.
+++++++++++
+|       ....
+++++++++++
+```
+
+## Furture discussion
+
+The reserved types can be used to implement TypedList and OrderedMap which are popular today. TypedList is List with schema; OrderedMap is Map whose key-value pairs has no order. In the future we shall provide guideline for reserved types.

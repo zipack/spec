@@ -1,6 +1,6 @@
 # zipack 格式规范
 
-官网：https://zipack.github.io/website
+官网：https://zipack.github.io/
 
 Zipack是一套高效的二进制序列化格式，比JSON更小更快，支持更多的数据类型包括Number，String，Bool，Null，ByteArray，List，Map以及保留类型。在字符串和小数的编码上，Zipack采用原创的算法来取代拥有诸多缺点的UTF-8和IEEE浮点数。
 
