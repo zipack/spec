@@ -11,3 +11,11 @@ The most popular serialization format today is JSON, which is based on text. How
 ## Ecosystem
 
 Zipack is essentially a specification, so we need software to implement it into practice. I have already realize a JavaScript version [zipack.js](https://github.com/zipack/zipack-javascript), but I need your help to build the ecosystem of zipack. In order to build coder/decoder for different programing languages, jump to [spec.md](documents/spec.md).
+
+## About me
+
+location: Nanjing China
+
+Email: jinhengyu666@qq.com or jinhengyu666@gmail.com
+
+I am a programmer interested in Information Theory and Math.
