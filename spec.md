@@ -10,7 +10,7 @@ Serialization is conversion from application objects into Zipack types. For exam
 
 ## The biased VLQ natural number
 
-The big-endian [VLQ](https://en.wikipedia.org/wiki/Variable-length_quantity) is a technique to encode variable-length quantities on top of 7 bits, it uses the most significant bit of every byte to indicate the continuation of current data. 0xxxxxxx stands for the last byte, 1xxxxxxx means there are bytes to come. The decoder won't stop until 0xxxxxxx, different length of VLQ shall like this:
+The big-endian [VLQ](https://en.wikipedia.org/wiki/Variable-length_quantity) is a technique to encode variable-length quantities on top of 7 bits, it uses the most significant bit of every byte to indicate the continuation of current data. 0xxxxxxx stands for the last byte, 1xxxxxxx means there are bytes to come. The decoder won't stop until 0xxxxxxx, different length of VLQ shall be like this:
 
 - 0xxxxxxx
 - 1xxxxxxx 0xxxxxxx
@@ -296,3 +296,5 @@ Zipack stream: one or more zipack object concatenated seamlessly.
 ## Furture discussion
 
 The reserved types can be used to implement TypedList and OrderedMap which are popular today. TypedList is List with schema; OrderedMap is Map whose key-value pairs has no order. In the future we shall provide guideline for reserved types.
+
+Zipack should also act as config file like JSON and YAML, but binary file can not be edited directly. We need a GUI tool to handle this, it can be a editor on desktop or a plugin inside IDEs and web browsers.
