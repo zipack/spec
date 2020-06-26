@@ -6,7 +6,7 @@ Zipack is a little bit complicated in comparison to other binary format like [Me
 
 ## Serialize and parse
 
-Serialization is conversion from application objects into Zipack types. For example, JavaScript's Array can be converted into Zipack's List. Parse is inversed process of serialization.
+Serialization is conversion from application objects into Zipack types. For example, JavaScript's Array should be converted into Zipack's List. Parsing is inversed process of serialization.
 
 ## The biased VLQ natural number
 
@@ -297,4 +297,4 @@ Zipack stream: one or more zipack object concatenated seamlessly.
 
 The reserved types can be used to implement TypedList and OrderedMap which are popular today. TypedList is List with schema; OrderedMap is Map whose key-value pairs has no order. In the future we shall provide guideline for reserved types.
 
-Zipack should also act as config file like JSON and YAML, but binary file can not be edited directly. We need a GUI tool to handle this, it can be a editor on desktop or a plugin inside IDEs and web browsers.
+Zipack should also act as config file like JSON and YAML, but binary file can not be edited directly. We need a GUI tool to handle this, it can be an editor or a plugin inside IDEs and web browsers.

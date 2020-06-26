@@ -4,7 +4,7 @@
 
 规范（英文）：[spec.md](./spec.md)
 
-这个仓库保存Zipack的规范，并且和Github保持同步更新。Zipack是一套高效的二进制序列化格式，比JSON更小更快，支持更多的数据类型。在字符串和小数的编码上，Zipack采用原创的算法来取代拥有诸多缺点的UTF-8和IEEE浮点数。
+这个仓库保存Zipack的规范，并且和Github仓库同步更新。Zipack是一套高效的二进制序列化格式，比JSON更小更快，支持更多的数据类型。在字符串和小数的编码上，Zipack采用原创的算法来取代臃肿的UTF-8和IEEE浮点数。
 
 文件后缀名：.zipack
 
@@ -14,7 +14,7 @@ mime类型：application/zipack
 
 1. 体积更小：可以将JSON压缩至70%左右。
 2. 速度更快：基于前缀的二进制格式无须编译，比文本格式更快。
-3. 类型丰富：支持Number，String，Bool，Null，ByteArray，List，Map（字典）以及保留类型。
+3. 类型丰富：支持Number，String，Bool，Null，ByteArray，List，Map（字典）以及保留类型。
 4. 变长编码：根据Huffman编码，常用的类型更短，如小整数只占1个字节。参考[tree.km](./doc/tree.km)
 5. 原创算法：在处理字符串和浮点数上，Zipack采用压缩率更高的编码来取代标准的UTF8和IEEE浮点数，具体原理请参考[spec.md](./spec.md)。
 6. 自由扩展：Zipack提供保留类型，开发者可添加新的类型。
@@ -30,12 +30,14 @@ mime类型：application/zipack
 
 ## 生态系统：I need you
 
-Zipack只是一个格式，想要投入使用，我们需要开发相应的软件。目前我已经开发出JavaScript版本的编解码器：[zipack.js](https://github.com/zipack/zipack-javascript)。但是我需要你的帮助来共同建设Zipack的生态，请参考[spec.md](./spec.md)开发其他编程语言的zipack工具。
+Zipack只是一个格式，想要投入使用，我们需要开发相应的软件。目前作者已经开发出JavaScript版本的编解码器：[zipack.js](https://github.com/zipack/zipack-javascript)。但是我需要你的帮助来共同建设Zipack的生态，请参考[spec.md](./spec.md)开发其他编程语言的zipack工具。
 
 ## 关于我
 
 坐标：江苏南京
 
 Github：https://github.com/jinhengyu
+
+Gitee：https://gitee.com/jinhengyu
 
 博客：https://jimmy.blog.csdn.net/

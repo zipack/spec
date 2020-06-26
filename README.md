@@ -40,4 +40,4 @@ Email: jinhengyu666@qq.com or jinhengyu666@gmail.com
 
 Blog (Chinese): https://jimmy.blog.csdn.net/
 
-I am a programmer interested in Information Theory and Math. If you like Zipack, contact and join me, make it great.
+I am a programmer interested in Information Theory and Math. If you like Zipack, contact and join me, make it great together.
