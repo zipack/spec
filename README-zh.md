@@ -17,7 +17,7 @@ mime类型：application/zipack
 3. 类型丰富：支持Number，String，Bool，Null，ByteArray，List，Map（字典）以及保留类型。
 4. 变长编码：根据Huffman编码，常用的类型更短，如小整数只占1个字节。参考[tree.km](./doc/tree.km)
 5. 原创算法：在处理字符串和浮点数上，Zipack采用压缩率更高的编码来取代标准的UTF8和IEEE浮点数，具体原理请参考[spec.md](./spec.md)。
-6. 自由扩展：Zipack提供保留类型，开发者可添加新的类型。
+6. 自由扩展：Zipack提供保留前缀，开发者可借此添加新的类型。
 7. 流化传输：处理大数据的时候，Zipack可以无缝拼接，边传输边处理。
 
 ## 应用场景

@@ -54,23 +54,23 @@ Zipack supports 21 data types(including 6 reserved types), their definition is [
 
 |               |   CLASS | LENGTH | meaning of LENGTH | PAYLOAD
 | --- | --- | --- | --- | ---
-| Mini Natural  | 0  | none | \  | 7bit (0~127)
+| Mini Natural  | 0  | none | \  | 7-bit (0~127)
 | VLQ +Int      | 1111 1000 | none          | \ | VLQ's natural + 128
 | VLQ -Int      | 1111 1001 | none          | \ | -1 - VLQ's natural
 | +Precision    | 1111 0010 | none          | \ | Zipack's Precision
 | -Precision    | 1111 0011 | none          | \ | Zipack's Precision
-| Mini String   | 100       | 5bit (0~31)         | count of chars | Zipack's String
+| Mini String   | 100       | 5-bit (0~31)         | count of chars | Zipack's String
 | VLQ String    | 1111 0101 | VLQ's natural + 32 | count of chars | Zipack's String
 | (key in Map)  | none      | VLQ's natural | count of key's chars | Zipack's String
 | Bytes         | 1111 0100 | VLQ's natural | count of bytes    | the pure bytes
 | Boolean       | 1111 0000, 1111 0001      | none | \ | \
 | Null          | 1111 1010 | none          | \ | \
-| Mini List     | 101       | 5bit (0~31)   | count of elements | List elements
+| Mini List     | 101       | 5-bit (0~31)   | count of elements | List elements
 | VLQ List      | 1111 0110 | VLQ's natural + 32 | count of elements | List elements
-| Mini Map      | 110       | 5bit (0~31)   | count of key-value pairs | key-value pairs
+| Mini Map      | 110       | 5-bit (0~31)   | count of key-value pairs | key-value pairs
 | VLQ Map       | 1111 0111 | VLQ's natural + 32 | count of key-value pairs | key-value pairs
 | reserved types | FB, FC, FD, FE, FF | \ | \ | \
-| reserved types | 1110     | 4bit(0~15)    | count of objects | countable objects
+| reserved types | 1110     | 4-bit(0~15)    | count of objects | countable objects
 
 ## Notation in diagrams
 
@@ -118,7 +118,7 @@ zero or more key-value pairs:
 
 ## Basic types
 
-The Basic types refer to True, False, Null, Integer Family, Precision Family, String, Bytes.
+The Basic types refer to True, False, Null, Integer family, Precision family, String family, Bytes.
 
 ### Single byte types: True, False, Null
 
@@ -139,7 +139,7 @@ Null:
 +--------+
 ```
 
-### Integer Family
+### Integer family
 
 ```text
 Mini Natural: stores 7-bit unsigned integer ranging from 0~127, in a single byte.
@@ -164,9 +164,9 @@ VLQ -Int: stores a negative integer counting from -1.
 
 > -1 means the real value of this VLQ should be added 1 and negative it.
 
-### Precision Family
+### Precision family
 
-The non-integer number is encoded using the "reversed bijective" algorithm I mentioned before. A Zipack's Precision number can be stored by 2 VLQ's Natural, one for Integer part(left), the other for Precision part(right).
+As I mentioned before, Zipack's non-integer number is encoded using the "reversed bijective" algorithm instead of standard IEEE FLoating Point. A Zipack's Precision number can be stored by 2 VLQ's Natural, one for Integer part(left), the other for Precision part(right).
 
 ```text
 +Precision: stores a positive non-integer.
@@ -196,9 +196,9 @@ Bytes stores pure binary data like files, images, etc. Zipack has NO "Mini Bytes
 
 > +0 means the real value of this VLQ is the count of pure bytes.
 
-### String
+### String family
 
-As mentioned before, a Unicode char can be encoded by a VLQ's Natural, so String is seamlessly concatenated chars.
+As I mentioned before, Zipack's String is based on VLQ instead of standard UTF-8. A Unicode char can be encoded by a VLQ's Natural, so String is seamlessly concatenated chars.
 
 ```text
 Mini String: stores a Unicode string whose length < 32.
@@ -218,9 +218,9 @@ VLQ String: stores a Unicode string whose length >= 32, the LENGTH part should c
 
 ## Complex types
 
-Complex types refer to List, Map and reserved types. In comparison to basic types, complex types can nest other basic/complex types like JSON.
+Complex types refer to List, Map and reserved types. In comparison to basic types, complex types can nest other basic/complex types like a tree.
 
-### List
+### List family
 
 Similar to String, Zipack List also defers Mini List and VLQ List.
 
@@ -240,12 +240,12 @@ VLQ List: stores a list whose length >= 32, the LENGTH part should count from 32
 
 > +32 means the real value of this VLQ representing the count of elements should be added 32.
 
-### Map
+### Map family
 
 Zipack Map is key-value pairs where the key is a string and the value can be any of Zipack's basic/complex types. Similar to String and List, Map also defers Mini Map and VLQ Map.
 
 ```text
-key-value pair: stores a string without prefix and a element.
+key-value pair: stores a string without prefix and an element.
 +========+============++++++++++
 |   +0   |    ....    |        |
 +========+============++++++++++
@@ -295,6 +295,6 @@ Zipack stream: one or more zipack object concatenated seamlessly.
 
 ## Furture discussion
 
-The reserved types can be used to implement TypedList and OrderedMap which are popular today. TypedList is List with schema; OrderedMap is Map whose key-value pairs has no order. In the future we shall provide guideline for reserved types.
+- The reserved types can be used to implement TypedList and OrderedMap which are popular today. TypedList is List with schema; OrderedMap is Map whose key-value pairs has no order. In the future we shall provide guideline for reserved types.
 
-Zipack should also act as config file like JSON and YAML, but binary file can not be edited directly. We need a GUI tool to handle this, it can be an editor or a plugin inside IDEs and web browsers.
+- Zipack should also act as config file like JSON and YAML, but binary file can not be edited directly. We need a GUI tool to handle this, it can be an editor or a plugin inside IDEs and web browsers.
