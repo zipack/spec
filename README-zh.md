@@ -32,7 +32,7 @@ mime类型：application/zipack
 
 Zipack只是一个格式，想要投入使用，我们需要开发相应的软件。目前作者已经开发出JavaScript版本的编解码器：[zipack.js](https://github.com/zipack/zipack-javascript)。但是我需要你的帮助来共同建设Zipack的生态，请参考[spec.md](./spec.md)开发其他编程语言的zipack工具。
 
-## 关于我
+## 关于作者
 
 坐标：江苏南京
 
