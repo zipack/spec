@@ -50,9 +50,9 @@ I abandoned IEEE's Floating Point for better compression. Literally every non-in
 
 ## The Huffman prefix
 
-Zipack supports 21 data types(including 6 reserved types), their definition is [tree.km](./tree.km). Generally every data type contains 3 parts: CLASS, LENGTH and PAYLOAD. Here is their definition table:
+Zipack supports 21 data types(including 6 reserved types), their definition is [tree.km](./tree.km). Generally every data type contains 3 parts: _CLASS, _LENGTH and _PAYLOAD. Here is their definition table:
 
-|               |   CLASS | LENGTH | meaning of LENGTH | PAYLOAD
+|               |   _CLASS | _LENGTH | length of | _PAYLOAD
 | --- | --- | --- | --- | ---
 | Mini Natural  | 0  | none | \  | 7-bit (0~127)
 | VLQ +Int      | 1111 1000 | none          | \ | VLQ's natural + 128
@@ -206,7 +206,7 @@ Mini String: stores a Unicode string whose length < 32.
 |100xxxxx|       ....
 +--------+========+
 
-VLQ String: stores a Unicode string whose length >= 32, the LENGTH part should count from 32.
+VLQ String: stores a Unicode string whose length >= 32, the _LENGTH part should count from 32.
 +--------+========+========+
 |   F5   |   +32  |       ....
 +--------+========+========+
@@ -230,7 +230,7 @@ Mini List: stores a list whose length < 32.
 |101xxxxx|       ....
 +--------++++++++++
 
-VLQ List: stores a list whose length >= 32, the LENGTH part should count from 32.
+VLQ List: stores a list whose length >= 32, the _LENGTH part should count from 32.
 +--------+========++++++++++
 |   F6   |   +32  |       ....
 +--------+========++++++++++
@@ -284,7 +284,7 @@ Zipack reserves 6 undefined prefix which can be extended by users:
 
 ## Zipack stream
 
-Zipack Stream is like List, but without prefix(CLASS and LENGTH part).
+Zipack Stream is like List, but without prefix(_CLASS and _LENGTH part).
 
 ```text
 Zipack stream: one or more zipack object concatenated seamlessly.
